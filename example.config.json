@@ -1,7 +1,6 @@
 {
   "gmail": {
-    "user": "example@gmail.com",
-    "pass": "password"
+    "user": "example@gmail.com"
   },
   "banned": {
     "persona": "personc",

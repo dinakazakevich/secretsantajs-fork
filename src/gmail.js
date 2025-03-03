@@ -1,12 +1,30 @@
 import nodemailer from 'nodemailer';
+const { google } = require('googleapis');
 
-export function sendEmail(gmail, personA, personB) {
-  const { user, pass } = gmail;
+// These id's and secrets should come from .env file, credits to https://youtu.be/-rcRf7yswfM?si=ldH5tUuJAC03bgyO for a walkthrough
+const CLIENT_ID = CLIENT_ID;
+const CLEINT_SECRET = 'CLIENT_SECRET';
+// CLIENT_ID &  CLIENT_SECRET https://console.cloud.google.com/apis/credentials/oauthclient/
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+const REFRESH_TOKEN = 'REFRESH_TOKEN'; // Can be found here https://developers.google.com/oauthplayground
+const oAuth2Client = new google.auth.OAuth2(
+    CLIENT_ID,
+    CLEINT_SECRET,
+    REDIRECT_URI
+);
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
+export async function sendEmail(gmail, personA, personB) {
+  const accessToken = await oAuth2Client.getAccessToken();
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user,
-      pass,
+      type: 'OAuth2',
+      user: user,
+      clientId: CLIENT_ID,
+      clientSecret: CLEINT_SECRET,
+      refreshToken: REFRESH_TOKEN,
+      accessToken: accessToken,
     }
   });
 
